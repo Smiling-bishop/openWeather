@@ -1,0 +1,15 @@
+.widget {
+    border: 2px solid cornflowerblue;
+    border-radius: 10px;
+    padding: 1rem;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+.widget * {
+    margin: 0;
+}
+.widget > .title {
+    font-weight: 700;
+    font-size: 20px;
+}

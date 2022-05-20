@@ -1,0 +1,19 @@
+.weather-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weather-head > .info {
+    display: flex;
+}
+.weather-head > .info > *:not(:first-child) {
+    margin-left: 1rem;
+}
+.weather-head > .info > .hours {
+    align-self: flex-end;
+}
+.weather-head > .info > .weather {
+    display: flex;
+    flex-direction: column;
+}
