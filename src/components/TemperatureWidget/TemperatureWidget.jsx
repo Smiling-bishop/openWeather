@@ -7,6 +7,7 @@ const TemperatureWidget = () => {
     data: { weather },
   } = useWeatherContext();
 
+  if (!weather) return null;
   return (
     <Widget>
       <p className={'title'}>Temperature (en °C)</p>

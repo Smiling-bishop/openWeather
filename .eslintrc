@@ -8,6 +8,7 @@
   "rules": {
     "no-unused-vars": "off", // todo pass to warn
     "react/react-in-jsx-scope": "off",
+    "no-case-declarations": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/prop-types": ["warn", { "skipUndeclared": true, "ignore": ["children", "className"] }]

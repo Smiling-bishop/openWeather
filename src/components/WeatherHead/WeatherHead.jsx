@@ -7,8 +7,13 @@ const WeatherHead = () => {
   const {
     data: { weather },
   } = useWeatherContext();
-  if (!weather) return null;
 
+  if (!weather)
+    return (
+      <p>
+        {`Merci d'activer la géolocalisation pour profiter pleinement de nos services`}
+      </p>
+    );
   return (
     <div className={'weather-head'}>
       <h2>{weather.name}</h2>

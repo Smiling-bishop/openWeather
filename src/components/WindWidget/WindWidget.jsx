@@ -7,6 +7,7 @@ const WindWidget = () => {
     data: { weather },
   } = useWeatherContext();
 
+  if (!weather) return null;
   return (
     <Widget>
       <p className={'title'}>Vent (en °C)</p>

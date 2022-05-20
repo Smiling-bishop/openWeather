@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react';
 import OpenWeatherService from '../apis/OpenWeather';
 
 const initialState = {
   cities: [],
+  weather: null,
   coldest: null,
   hottest: null,
-  targetCity: null,
 };
 
 export const WeatherContext = createContext([]);
@@ -13,7 +19,6 @@ export const useWeatherContext = () => useContext(WeatherContext);
 
 const WEATHER_ACTION = {
   ADD_CITY: 'addCity',
-  REMOVE_CITY: 'removeCity',
   LOAD_WEATHER: 'loadWeather',
 };
 const reducer = (state, action) => {
@@ -22,9 +27,16 @@ const reducer = (state, action) => {
 
   switch (action.type) {
     case WEATHER_ACTION.ADD_CITY:
-      return { count: state.count + 1 };
-    case WEATHER_ACTION.REMOVE_CITY:
-      return { count: state.count + 1 };
+      const cities = [...state.cities, action.payload];
+      let coldest;
+      let hottest;
+      if (cities.length > 0) {
+        const sortCities = cities.sort((a, b) => a.main.temp > b.main.temp);
+        coldest = sortCities[0];
+        hottest = sortCities[sortCities.length - 1];
+      }
+      console.log(cities);
+      return { ...state, cities, coldest, hottest };
     case WEATHER_ACTION.LOAD_WEATHER:
       sunsetDate = new Date(action.payload.sys.sunset * 1000);
       sunriseDate = new Date(action.payload.sys.sunrise * 1000);
@@ -43,6 +55,20 @@ const reducer = (state, action) => {
 
 const WeatherProvider = ({ children }) => {
   const [data, dispatch] = useReducer(reducer, initialState);
+
+  const addCity = useCallback((coordinates) => {
+    let coords = coordinates.split(',').map((c) => parseFloat(c.trim()));
+    OpenWeatherService.GET(coords[0], coords[1])
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject();
+      })
+      .then((payload) => {
+        dispatch({ type: WEATHER_ACTION.ADD_CITY, payload });
+      });
+  }, []);
 
   useEffect(() => {
     let abortController;
@@ -70,7 +96,7 @@ const WeatherProvider = ({ children }) => {
   }, []);
 
   return (
-    <WeatherContext.Provider value={{ data }}>
+    <WeatherContext.Provider value={{ data, addCity }}>
       {children}
     </WeatherContext.Provider>
   );
